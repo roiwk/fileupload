@@ -20,30 +20,30 @@ final class ConfigMapper
             static::$instance = new static();
             $defaultConfig = require_once __DIR__ . '/config.php';
             if (is_array($config)) {
-                static::$instance->config = array_replace_recursive($defaultConfig, $config);
+                (static::$instance)->config = array_replace_recursive($defaultConfig, $config);
             } else if (is_string($config) && is_file($config)) {
                 $load = require_once $config;
                 if (!is_array($load)) {
                     throw new \InvalidArgumentException('config file should be array return.');
                 }
-                static::$instance->config = array_replace_recursive($defaultConfig, $load);
+                (static::$instance)->config = array_replace_recursive($defaultConfig, $load);
             } else {
-                static::$instance->config = require_once __DIR__ . '/config.php';
+                (static::$instance)->config = $defaultConfig;
             }
         }
 
         return static::$instance;
     }
 
-    public static function get($property = null)
+    public static function get($property = null, $default = null)
     {
-        $value = self::getInstance()->config;
+        $value = (self::getInstance())->config;
         if ($property !== null) {
             foreach (explode('.', $property) as $segment) {
                 if (isset($value[$segment])) {
                     $value = $value[$segment];
                 } else {
-                    return null;
+                    return $default;
                 }
             }
         }
@@ -52,7 +52,7 @@ final class ConfigMapper
 
     public static function append($property, $value): void
     {
-        $config = &self::getInstance()->config;
+        $config = &(self::getInstance())->config;
         foreach (explode('.', $property) as $segment) {
             if (isset($config[$segment])) {
                 $config = &$config[$segment];
@@ -71,7 +71,7 @@ final class ConfigMapper
 
     public static function set($property, $value): void
     {
-        $config = &self::getInstance()->config;
+        $config = &(self::getInstance())->config;
         foreach (explode('.', $property) as $segment) {
             if (isset($config[$segment])) {
                 $config = &$config[$segment];
