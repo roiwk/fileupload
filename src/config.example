@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'test_mode'       => false,
     'file_upload_key' => 'file',     // 文件字段名
     'max_size'        => 2048000,    // 文件最大大小  2M
     'chunk_limit'     => 2048000,    // 分块限制      2M

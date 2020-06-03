@@ -2,29 +2,22 @@
 
 namespace Roiwk\FileUpload\Validator;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
 abstract class AbstractValidator
 {
     /**
-     * @var UploadedFile
+     * @var bool
      */
-    private $file;
+    protected $error;
 
     /**
      * @var string
      */
-    private $error;
+    protected $errMsg;
 
-    public function __construct(UploadedFile $file)
+    abstract public function valid($needle): bool;
+
+    public function getErrorMsg(): string
     {
-        $this->file = $file;
-    }
-
-    abstract public function valid($passable): bool;
-
-    public function error(): string
-    {
-        return $this->error;
+        return $this->errMsg;
     }
 }

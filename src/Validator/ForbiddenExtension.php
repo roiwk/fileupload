@@ -2,7 +2,7 @@
 
 namespace Roiwk\FileUpload\Validator;
 
-class Mimetype extends AbstractValidator
+class ForbiddenExtension extends AbstractValidator
 {
     /**
      * @var array
@@ -14,11 +14,12 @@ class Mimetype extends AbstractValidator
         $this->passable = $passable;
     }
 
-    public function valid($mime): bool
+    public function valid($extension): bool
     {
-        $this->error = $pass = in_array($mime, $this->passable);
+        $pass = !in_array($extension, $this->passable);
+        $this->error = $pass;
         if (!$pass) {
-            $this->errMsg = 'Not allowed file mime type in config file.';
+            $this->errMsg = 'Not allowed file extension in config file.';
         }
         return $pass;
     }
