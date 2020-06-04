@@ -2,75 +2,65 @@
 
 use PHPUnit\Framework\TestCase;
 use Roiwk\FileUpload\ConfigMapper;
-use Roiwk\FileUpload\Factory;
+use Roiwk\FileUpload\App;
+use Roiwk\FileUpload\Response\ResponseInterface;
 
 class RequestTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        $_FILES = [
-            'file' => [
-                'name' => [
-                   'test.jpg',
-                ],
-                'type' => [
-                   'image/jpeg',
-                ],
-                'tmp_name' => [
-                   __DIR__ . '/test.jpg',
-                ],
-                'error' => [
-                   0,
-                ],
-                'size' => [
-                   4410,
-                ],
-             ]
-        ];
-    }
+   protected function setUp(): void
+   {
+      $_FILES = [
+         'file' => [
+               'name' => [
+                  'test.jpg',
+               ],
+               'type' => [
+                  'image/jpeg',
+               ],
+               'tmp_name' => [
+                  __DIR__ . '/test.jpg',
+               ],
+               'error' => [
+                  0,
+               ],
+               'size' => [
+                  4410,
+               ],
+            ]
+      ];
+   }
 
-    public function testPreprocessHandler()
+    public function testBingoProcess()
     {
+        // preprocess
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['PATH_INFO'] = '/process';
+        $_SERVER['REQUEST_URI'] = '/process';
+        $preprocess = new App();
+        $preprocess->filterFromGlobal();
+        $this->assertTrue(is_array($preprocess->processHandler->handle()));
 
-        $handler = new Factory();
-        $handler->config->set('test_mode', true);
-
-        // $this->assertSame('preprocess', $handler->handle());
-    }
-
-    public function testUploadingHandler()
-    {
+        // uploading
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['PATH_INFO'] = '/process';
+        $_SERVER['REQUEST_URI'] = '/process';
+        $uploading = new App();
+        $uploading->filterFromGlobal();
+        $this->assertTrue(is_array($uploading->processHandler->handle()));
 
-        $handler = new Factory();
-        $handler->config->set('test_mode', true);
-
-        // $this->assertSame('uploading', $handler->handle());
-    }
-
-    public function testDeleteHandler()
-    {
+        // delete
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
-        $_SERVER['PATH_INFO'] = '/process';
-
-        $handler = new Factory();
-        $handler->config->set('test_mode', true);
-
-        // $this->assertSame('delete', $handler->handle());
+        $_SERVER['REQUEST_URI'] = '/process';
+        $delete = new App();
+        $delete->filterFromGlobal();
+        $this->assertTrue(is_array($delete->processHandler->handle()));
     }
 
-    public function testErrorHandler()
+    public function testNullProcess()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['PATH_INFO'] = '/test';
+        $_SERVER['REQUEST_URI'] = '/test';
         $_SERVER['REQUEST_URI'] = '/test';
 
-        $handler = new Factory();
-        $handler->config->set('test_mode', true);
-
-        // $this->assertSame(null, $handler->handle());
+        $handler = new App();
+        $this->assertSame(null, $handler->handle());
     }
 }

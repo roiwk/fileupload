@@ -2,6 +2,8 @@
 
 namespace Roiwk\FileUpload\Validator;
 
+use Roiwk\FileUpload\UploadedFile;
+
 abstract class AbstractValidator
 {
     /**
@@ -14,7 +16,7 @@ abstract class AbstractValidator
      */
     protected $errMsg;
 
-    abstract public function valid($needle): bool;
+    abstract public function valid(UploadedFile $file): bool;
 
     public function getErrorMsg(): string
     {

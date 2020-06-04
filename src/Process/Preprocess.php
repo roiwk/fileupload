@@ -2,23 +2,31 @@
 
 namespace Roiwk\FileUpload\Process;
 
+use Roiwk\FileUpload\UploadedFile;
+
 class Preprocess extends AbstractProcess
 {
-    public function handle(): ?array
+    private function validate()
     {
-        $result = [];
-        foreach($this->files as $file){
-
+        // 校验扩展名+文件大小
+        $file = new UploadedFile('', '', $this->app->parameter['resource_name'], $this->app->parameter['resource_size']);
+        foreach ($this->app->validator as $validate) {
+            if (!$validate->valid($file)) {
+                $this->error = 1;
+                $this->errMsg = $validate->getErrorMsg();
+                return;
+            }
         }
-
-        return $result;
     }
 
-    private function createContent(string $tmp_dir, int $max_size): array
+    public function handle(): array
     {
+        $this->validate();
         return [
-            'tmp_dir' => $this->pathSolver->getFilename(''),
-            // ''
+            'tmp_dir'    => $this->app->pathSolver->getFilename($this->app->parameter['resource_name']),
+            'chunk_size' => $this->app->config->get('chunk_limit'),
+            'error'      => $this->error,
+            'err_msg'    => $this->errMsg,
         ];
     }
 }

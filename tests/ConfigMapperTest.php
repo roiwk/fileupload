@@ -28,7 +28,7 @@ class ConfigMapperTest extends TestCase
     public function testGetConfig()
     {
         $this->assertSame('file', ConfigMapper::get('file_upload_key'));
-        $this->assertSame('md5', ConfigMapper::get('storage.filename_hash.algo'));
+        $this->assertSame('date', ConfigMapper::get('storage.sub_dir'));
     }
 
 

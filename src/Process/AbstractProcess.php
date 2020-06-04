@@ -2,45 +2,36 @@
 
 namespace Roiwk\FileUpload\Process;
 
-use Roiwk\FileUpload\PathSolver;
+use Roiwk\FileUpload\App;
 
 abstract class AbstractProcess
 {
+    /**
+     * 0 成功
+     *
+     * @var integer
+     */
+    public $error = 0;
 
     /**
-     * @var array
+     * @var string
      */
-    protected $parameter;
+    public $errMsg = '';
 
     /**
-     * @var array[AbstractValidator]
+     * @var App
      */
-    protected $validator;
-
-    /**
-     * @var array[UploadedFile]
-     */
-    protected $files;
-
-    /**
-     * @var array[PathSolver]
-     */
-    protected $pathSolver;
+    public $app;
 
     /**
      * construct
      *
-     * @param array $parameter   请求参数
-     * @param array $validator   检验
-     * @param array $files       文件
+     * @param App $app
      */
-    public function __construct(PathSolver $pathSolver, array $parameter, array $validator = [], array $files = [])
+    public function __construct(App $app)
     {
-        $this->pathSolver = $pathSolver;
-        $this->parameter  = $parameter;
-        $this->validator  = $validator;
-        $this->files      = $files;
+        $this->app = $app;
     }
 
-    abstract public function handle(): ?array;
+    abstract public function handle(): array;
 }

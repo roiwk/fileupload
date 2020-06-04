@@ -1,6 +1,7 @@
 <?php
 
 use Roiwk\FileUpload\NameHash\{Md5};
+use Roiwk\FileUpload\Response\DefaultResponse;
 
 return [
     'test_mode'           => true,
@@ -50,11 +51,11 @@ return [
         ],
     ],
 
-    'response_provider' => 'default',  // defalut
+    'response_provider' => DefaultResponse::class,  // defalut
 
     'storage' => [
-        'store_dir'       => '/path/to/store',
-        'sub_dir'         => 'month',            //date, month, year
+        'store_dir'       => __DIR__ . '/../tests/store',
+        'sub_dir'         => 'date',            //date, month, year
         'filename_algo'   => Md5::class,
         'filename_prefix' => '',                 // 散列之后的前缀
         'filename_suffix' => '',                 // 散列之后的后缀

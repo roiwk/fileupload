@@ -6,7 +6,7 @@ use Roiwk\FileUpload\Storage\DirHash;
 
 class Uploading extends AbstractProcess
 {
-    public function handle(): ?array
+    public function handle(): array
     {
         return [];
     }
