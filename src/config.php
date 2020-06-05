@@ -36,7 +36,8 @@ return [
             'method' => 'post',
             'uri'    => '/process',
             'param_map' => [
-                'tmp_dir'        => 'tmp_dir',
+                'sub_dir'        => 'sub_dir',
+                'resource_name'  => 'filename',
                 'resource_chunk' => 'chunk_file',
                 'chunk_total'    => 'chunk_total',
                 'chunk_index'    => 'chunk_index',
@@ -46,7 +47,8 @@ return [
             'method' => 'delete',
             'uri'    => '/process',
             'param_map' => [
-                'tmp_dir' => 'tmp_dir',
+                'sub_dir'        => 'sub_dir',
+                'resource_name'  => 'filename',
             ],
         ],
     ],

@@ -8,7 +8,6 @@ class Preprocess extends AbstractProcess
 {
     private function validate()
     {
-        // 校验扩展名+文件大小
         $file = new UploadedFile('', '', $this->app->parameter['resource_name'], $this->app->parameter['resource_size']);
         foreach ($this->app->validator as $validate) {
             if (!$validate->valid($file)) {
@@ -23,7 +22,7 @@ class Preprocess extends AbstractProcess
     {
         $this->validate();
         return [
-            'tmp_dir'    => $this->app->pathSolver->getFilename($this->app->parameter['resource_name']),
+            'sub_dir'    => $this->app->subdir,
             'chunk_size' => $this->app->config->get('chunk_limit'),
             'error'      => $this->error,
             'err_msg'    => $this->errMsg,

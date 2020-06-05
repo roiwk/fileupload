@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Roiwk\FileUpload\ConfigMapper;
-use Roiwk\FileUpload\App;
+use Roiwk\FileUpload\Container as App;
 use Roiwk\FileUpload\Response\ResponseInterface;
 
 class RequestTest extends TestCase
@@ -11,22 +11,12 @@ class RequestTest extends TestCase
    {
       $_FILES = [
          'file' => [
-               'name' => [
-                  'test.jpg',
-               ],
-               'type' => [
-                  'image/jpeg',
-               ],
-               'tmp_name' => [
-                  __DIR__ . '/test.jpg',
-               ],
-               'error' => [
-                  0,
-               ],
-               'size' => [
-                  4410,
-               ],
-            ]
+            'name'     => 'test.jpg',
+            'type'     => 'image/jpeg',
+            'tmp_name' => __DIR__ . 'file/test.jpg',
+            'error'    => 0,
+            'size'     => 4410,
+         ]
       ];
    }
 
@@ -36,22 +26,19 @@ class RequestTest extends TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/process';
         $preprocess = new App();
-        $preprocess->filterFromGlobal();
-        $this->assertTrue(is_array($preprocess->processHandler->handle()));
+        $this->assertTrue(is_array($preprocess->handle()));
 
         // uploading
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_SERVER['REQUEST_URI'] = '/process';
         $uploading = new App();
-        $uploading->filterFromGlobal();
-        $this->assertTrue(is_array($uploading->processHandler->handle()));
+        $this->assertTrue(is_array($uploading->handle()));
 
         // delete
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
         $_SERVER['REQUEST_URI'] = '/process';
         $delete = new App();
-        $delete->filterFromGlobal();
-        $this->assertTrue(is_array($delete->processHandler->handle()));
+        $this->assertTrue(is_array($delete->handle()));
     }
 
     public function testNullProcess()

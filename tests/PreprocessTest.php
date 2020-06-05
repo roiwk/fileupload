@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Roiwk\FileUpload\ConfigMapper;
-use Roiwk\FileUpload\App;
+use Roiwk\FileUpload\Container as App;
 use Roiwk\FileUpload\Response\ResponseInterface;
 
 class PreprocessTest extends TestCase
@@ -22,11 +22,9 @@ class PreprocessTest extends TestCase
         ];
 
         $preprocess = new App();
-        $preprocess->filterFromGlobal();
-        $handle = $preprocess->processHandler->handle();
+        $handle = $preprocess->handle();
 
         $this->assertSame(0, $handle['error']);
-        $this->assertSame($preprocess->pathSolver->getFilename($_REQUEST['filename']), $handle['tmp_dir'], json_encode($handle));
     }
 
     public function testCantPassExtensionPreprocess()
@@ -37,8 +35,7 @@ class PreprocessTest extends TestCase
         ];
 
         $preprocess = new App();
-        $preprocess->filterFromGlobal();
-        $handle = $preprocess->processHandler->handle();
+        $handle = $preprocess->handle();
 
         $this->assertSame(1, $handle['error']);
         $this->assertSame('Not allowed file extension in config file.', $handle['err_msg'], json_encode($handle));
@@ -52,8 +49,7 @@ class PreprocessTest extends TestCase
         ];
 
         $preprocess = new App();
-        $preprocess->filterFromGlobal();
-        $handle = $preprocess->processHandler->handle();
+        $handle = $preprocess->handle();
 
         $this->assertSame(1, $handle['error']);
         $this->assertSame('The uploading file exceeds the file size limit defined in config file.', $handle['err_msg'], json_encode($handle));

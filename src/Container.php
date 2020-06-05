@@ -7,7 +7,7 @@ use Roiwk\FileUpload\Process\{Preprocess, Uploading, Delete};
 use Roiwk\FileUpload\Validator\{ForbiddenExtension, Size};
 use Roiwk\FileUpload\Exception\MakeStorageDirException;
 
-class App
+class Container
 {
     /**
      * 配置单例
@@ -29,6 +29,13 @@ class App
      * @var string
      */
     public $dir;
+
+    /**
+     * 子文件夹路径
+     *
+     * @var string
+     */
+    public $subdir = '';
 
     /**
      * 进程
@@ -130,7 +137,9 @@ class App
             ) {
                 $this->process = $route;
                 $this->setRequestParameter();
-                $this->process == 'uploading' && $this->setGlobalFiles();
+                if ($this->process == 'uploading') {
+                    $this->setGlobalFiles();
+                }
                 $this->validator = $this->processValidator[$this->process];
 
                 $processClass          = $this->processProvider[$this->process];
@@ -146,14 +155,18 @@ class App
     /**
      * 处理请求
      *
-     * @return null|response
+     * @return null|array|response
      */
-    public function handle()
+    public function handle($withResponse = false)
     {
         if (!$this->filterFromGlobal()) {
             return null;
         }
-        return $this->responseHandler->sendResponse($this->processHandler->handle());
+        if ($withResponse) {
+            return $this->responseHandler->sendResponse($this->processHandler->handle());
+        } else {
+            return $this->processHandler->handle();
+        }
     }
 
     /**
@@ -170,14 +183,16 @@ class App
             ];
         } else if ($this->process == 'uploading') {
             $this->parameter = [
-                'tmp_dir'        => $_REQUEST[$this->config->get('route.preprocess.param_map.tmp_dir')] ?? '',
-                'resource_chunk' => $_REQUEST[$this->config->get('route.preprocess.param_map.resource_chunk')] ?? 0,
-                'chunk_total'    => $_REQUEST[$this->config->get('route.preprocess.param_map.chunk_total')] ?? 0,
-                'chunk_index'    => $_REQUEST[$this->config->get('route.preprocess.param_map.chunk_index')] ?? 0,
+                'sub_dir'        => $_REQUEST[$this->config->get('route.uploading.param_map.sub_dir')] ?? '',
+                'resource_name'  => $_REQUEST[$this->config->get('route.uploading.param_map.resource_name')] ?? '',
+                'resource_chunk' => $_REQUEST[$this->config->get('route.uploading.param_map.resource_chunk')] ?? 0,
+                'chunk_total'    => $_REQUEST[$this->config->get('route.uploading.param_map.chunk_total')] ?? 0,
+                'chunk_index'    => $_REQUEST[$this->config->get('route.uploading.param_map.chunk_index')] ?? 0,
             ];
         } else if ($this->process == 'delete') {
             $this->parameter = [
-                'tmp_dir' => $_REQUEST[$this->config->get('route.preprocess.param_map.tmp_dir')] ?? '',
+                'sub_dir'       => $_REQUEST[$this->config->get('route.delete.param_map.sub_dir')] ?? '',
+                'resource_name' => $_REQUEST[$this->config->get('route.delete.param_map.resource_name')] ?? '',
             ];
         } else {
             // null
@@ -193,8 +208,8 @@ class App
     {
         $originFiles = $_FILES[$this->config->get('file_upload_key')];
         $this->file = new UploadedFile(
-            $originFiles['name'][0], $originFiles['type'][0], $originFiles['tmp_name'][0],
-            $originFiles['size'][0], $originFiles['error'][0]
+            $originFiles['name'], $originFiles['type'], $originFiles['tmp_name'],
+            $originFiles['size'], $originFiles['error']
         );
     }
 
@@ -219,27 +234,24 @@ class App
     private function initStorage(): void
     {
         $dir = $this->config->get('storage.store_dir');
-        $subdir = $this->config->get('storage.sub_dir');
-        if ($subdir == 'date') {
-            $dir = $dir . '/' . date('Ymd');
-        } else if ($subdir == 'month') {
-            $dir = $dir . '/' . date('Ym');
-        } else if ($subdir == 'year') {
-            $dir = $dir . '/' . date('Y');
+        $subConfig = $this->config->get('storage.sub_dir');
+        $sub = [
+            'date'  => 'Ymd',
+            'month' => 'Ym',
+            'year'  => 'Y',
+        ];
+        if (isset($sub[$subConfig])) {
+            $this->subdir = date($sub[$subConfig]);
         } else {
-            $dir = $dir;
+            $this->subdir = '';
         }
+
         if (!is_dir($dir)) {
             if (!mkdir($dir, 0766, true)) {
                 throw new MakeStorageDirException();
             }
         }
         $this->dir = $dir;
-        $algo = $this->config->get('storage.filename_algo');
-        $this->pathSolver = new PathSolver(
-            $this->dir, new $algo(),
-            $this->config->get('storage.filename_prefix'), $this->config->get('storage.filename_suffix')
-        );
     }
 
     /**
