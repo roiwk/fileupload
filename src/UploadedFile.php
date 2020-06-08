@@ -15,6 +15,11 @@ class UploadedFile extends \SplFileInfo
     private $clientMime;
 
     /**
+     * @var string
+     */
+    private $clientExtension;
+
+    /**
      * @var int
      */
     private $clientSize;
@@ -29,16 +34,22 @@ class UploadedFile extends \SplFileInfo
 
     public function __construct(string $name, string $type, string $tmp_name, int $size, int $error = 0)
     {
-        $this->clientFilename = $name;
-        $this->clientMime     = $type;
-        $this->clientSize     = $size;
-        $this->error          = $error;
+        $this->clientFilename  = $name;
+        $this->clientMime      = $type;
+        $this->clientExtension = pathinfo($name, PATHINFO_EXTENSION);
+        $this->clientSize      = $size;
+        $this->error           = $error;
         return parent::__construct($tmp_name);
     }
 
     public function getClientFilename(): string
     {
         return $this->clientFilename;
+    }
+
+    public function getClientExtension(): string
+    {
+        return $this->clientExtension;
     }
 
     public function getClientMime(): string

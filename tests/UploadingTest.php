@@ -1,9 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Roiwk\FileUpload\ConfigMapper;
 use Roiwk\FileUpload\Container as App;
-use Roiwk\FileUpload\Response\ResponseInterface;
 
 class UploadingTest extends TestCase
 {
@@ -14,7 +12,7 @@ class UploadingTest extends TestCase
         $_SERVER['REQUEST_URI'] = '/process';
     }
 
-    public function testCantPassSizePreprocess()
+    public function testCantPassSizeUploading()
     {
         $_FILES = [
             'file' => [
@@ -38,7 +36,7 @@ class UploadingTest extends TestCase
         $this->assertSame(1, $handle['error'], json_encode($handle));
     }
 
-    public function testPassPreprocess()
+    public function testPassUploading()
     {
         $_FILES = [
             'file' => [
@@ -63,17 +61,29 @@ class UploadingTest extends TestCase
         $this->assertSame(0, $handle['error'], json_encode($handle));
     }
 
-    // public function testCantPassSizePreprocess()
-    // {
-    //     $_REQUEST = [
-    //         'filename' => 'test.jpg',
-    //         'size'     => 2048000011,
-    //     ];
+    public function testFinishUploading()
+    {
+        $_FILES = [
+            'file' => [
+               'name'     => 'test_3M+.png',
+               'type'     => 'image/png',
+               'tmp_name' => __DIR__ . '/file/test_3M+_2',
+               'error'    => 0,
+               'size'     => filesize(__DIR__ . '/file/test_3M+_2'),
+            ]
+         ];
+        $_REQUEST = [
+            'sub_dir'        => '20200605',
+            'filename'       => 'test_3M+.png',
+            'chunk_file'     => fread(fopen($_FILES['file']['tmp_name'], 'r'), filesize($_FILES['file']['tmp_name'])),
+            'chunk_total'    => 2,
+            'chunk_index'    => 2,
+        ];
 
-    //     $uploading = new App();
-    //     $handle = $uploading->handle();
+        $uploading = new App();
+        $handle = $uploading->handle();
 
-    //     $this->assertSame(1, $handle['error']);
-    //     $this->assertSame('The uploading file exceeds the file size limit defined in config file.', $handle['err_msg'], json_encode($handle));
-    // }
+        $this->assertSame(0, $handle['error'], json_encode($handle));
+    }
+
 }

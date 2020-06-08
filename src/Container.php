@@ -137,9 +137,7 @@ class Container
             ) {
                 $this->process = $route;
                 $this->setRequestParameter();
-                if ($this->process == 'uploading') {
-                    $this->setGlobalFiles();
-                }
+                $this->setGlobalFiles();
                 $this->validator = $this->processValidator[$this->process];
 
                 $processClass          = $this->processProvider[$this->process];
@@ -206,11 +204,19 @@ class Container
      */
     private function setGlobalFiles(): void
     {
-        $originFiles = $_FILES[$this->config->get('file_upload_key')];
-        $this->file = new UploadedFile(
-            $originFiles['name'], $originFiles['type'], $originFiles['tmp_name'],
-            $originFiles['size'], $originFiles['error']
-        );
+        if ($this->process == 'preprocess') {
+            $this->file = new UploadedFile($this->parameter['resource_name'], '', $this->parameter['resource_name'], $this->parameter['resource_size']);
+        } else if ($this->process == 'uploading') {
+            $originFiles = $_FILES[$this->config->get('file_upload_key')];
+            $this->file = new UploadedFile(
+                $originFiles['name'], $originFiles['type'], $originFiles['tmp_name'],
+                $originFiles['size'], $originFiles['error']
+            );
+        } else if ($this->process == 'delete') {
+            $this->file = new UploadedFile($this->parameter['resource_name'], '', $this->parameter['resource_name'], 0);
+        } else {
+            // null
+        }
     }
 
     /**
