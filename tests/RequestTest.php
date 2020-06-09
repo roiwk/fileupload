@@ -1,9 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Roiwk\FileUpload\ConfigMapper;
 use Roiwk\FileUpload\Container as App;
-use Roiwk\FileUpload\Response\ResponseInterface;
 
 class RequestTest extends TestCase
 {
@@ -13,7 +11,7 @@ class RequestTest extends TestCase
          'file' => [
             'name'     => 'test.jpg',
             'type'     => 'image/jpeg',
-            'tmp_name' => __DIR__ . 'file/test.jpg',
+            'tmp_name' => __DIR__ . '/file/test.jpg',
             'error'    => 0,
             'size'     => 4410,
          ]

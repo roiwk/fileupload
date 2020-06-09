@@ -57,16 +57,15 @@ class IndexFile
     {
         $this->total = $total;
         $this->current = $current;
-        if ($total == $current) {
-            $this->finish = true;
-        }
         return $this;
     }
 
     public function append(string $chunkFilename): self
     {
-        array_push($this->indexArray, $chunkFilename);
-        $this->indexArray = array_unique($this->indexArray);
+        $this->indexArray[$this->current] = $chunkFilename;
+        if ($this->total == count($this->indexArray)) {
+            $this->finish = true;
+        }
         return $this;
     }
 

@@ -2,14 +2,8 @@
     "name": "roiwk/fileupload",
     "description": "Handle file uploads 文件/分片文件/大文件上传",
     "keywords": [
-      "upload",
-      "chunked file",
-      "large file",
-      "multiple file",
-      "上传",
-      "大文件",
-      "分片上传",
-      "文件上传",
+      "upload", "chunked file", "large file",
+      "上传", "大文件", "分片上传", "文件上传",
       "lumen"
     ],
     "authors": [
