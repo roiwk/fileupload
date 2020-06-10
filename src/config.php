@@ -6,22 +6,12 @@ use Roiwk\FileUpload\Response\DefaultResponse;
 return [
     'test_mode'           => true,
 
-    'php_ini_set'         => [
-        'max_execution_time'  => 300,
-        'memory_limit'        => '500M',
-        'post_max_size'       => '40M',
-        'upload_max_filesize' => '40M',
-        'max_file_uploads'    => 20,
-    ],
-
-    'max_size'        => 20480000,   // 文件最大大小  20M
-    'chunk_limit'     => 2048000,    // 分块限制      2M
+    'max_size'        => 204800000,   // 文件最大大小  200M
+    'chunk_limit'     => 2048000,     // 分块限制      2M
     'forbidden_extensions' => [      // 文件扩展名黑名单
         'php', 'part', 'html', 'shtml', 'htm', 'shtm', 'xhtml', 'xml', 'js', 'jsp', 'asp',
         'java', 'py', 'sh', 'bat', 'exe', 'dll', 'cgi', 'htaccess', 'reg', 'aspx', 'vbs'
     ],
-
-    'file_upload_key' => 'file',     // 文件字段名
 
     'route'   =>  [   // 请求
         'preprocess'   => [

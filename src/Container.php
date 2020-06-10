@@ -119,7 +119,6 @@ class Container
      */
     private function init(): void
     {
-        $this->setPHPini();
         $this->initStorage();
         $this->initValidator();
     }
@@ -131,10 +130,10 @@ class Container
      */
     public function filterFromGlobal(): bool
     {
+        $method = $_SERVER['REQUEST_METHOD'];
+        $uri = $_SERVER['PATH_INFO'] ?? $_SERVER['SCRIPT_NAME'] ?? $_SERVER['REQUEST_URI'] ?? $_SERVER['REDIRECT_URL'];
         foreach($this->config->get('route') as $route => $setting) {
-            if (strtoupper($setting['method']) == $_SERVER['REQUEST_METHOD']
-                && $setting['uri'] == ($_SERVER['PATH_INFO'] ?? $_SERVER['REQUEST_URI'] ?? $_SERVER['REDIRECT_URL'])
-            ) {
+            if (strtoupper($setting['method']) == $method && $setting['uri'] == $uri) {
                 $this->process = $route;
                 $this->setRequestParameter();
                 $this->setGlobalFiles();
@@ -157,6 +156,14 @@ class Container
      */
     public function handle($withResponse = false)
     {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE');
+        header('Access-Control-Allow-Headers: Origin,Accept, X-Requested-With, Content-Type,X-CSRF-TOKEN');
+        header('Access-Control-Allow-Credentials: true');
+        // CORS -- option
+        // if (strtoupper($_SERVER['REQUEST_METHOD']) == 'OPTIONS'){
+        //     return null;
+        // }
         if (!$this->filterFromGlobal()) {
             return null;
         }
@@ -183,7 +190,6 @@ class Container
             $this->parameter = [
                 'sub_dir'        => $_REQUEST[$this->config->get('route.uploading.param_map.sub_dir')] ?? '',
                 'resource_name'  => $_REQUEST[$this->config->get('route.uploading.param_map.resource_name')] ?? '',
-                'resource_chunk' => $_REQUEST[$this->config->get('route.uploading.param_map.resource_chunk')] ?? 0,
                 'chunk_total'    => $_REQUEST[$this->config->get('route.uploading.param_map.chunk_total')] ?? 0,
                 'chunk_index'    => $_REQUEST[$this->config->get('route.uploading.param_map.chunk_index')] ?? 0,
             ];
@@ -207,28 +213,15 @@ class Container
         if ($this->process == 'preprocess') {
             $this->file = new UploadedFile($this->parameter['resource_name'], '', $this->parameter['resource_name'], $this->parameter['resource_size']);
         } else if ($this->process == 'uploading') {
-            $originFiles = $_FILES[$this->config->get('file_upload_key')];
+            $originFiles = $_FILES[$this->config->get('route.uploading.param_map.resource_chunk')];
             $this->file = new UploadedFile(
-                $originFiles['name'], $originFiles['type'], $originFiles['tmp_name'],
+                $this->parameter['resource_name'], $originFiles['type'], $originFiles['tmp_name'],
                 $originFiles['size'], $originFiles['error']
             );
         } else if ($this->process == 'delete') {
             $this->file = new UploadedFile($this->parameter['resource_name'], '', $this->parameter['resource_name'], 0);
         } else {
             // null
-        }
-    }
-
-    /**
-     * php_ini
-     *
-     * @return void
-     */
-    private function setPHPini(): void
-    {
-        $phpIniConfig = $this->config->get('php_ini_set');
-        foreach ($phpIniConfig as $key => $value) {
-            ini_set($key, $value);
         }
     }
 
