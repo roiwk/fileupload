@@ -46,9 +46,9 @@ php实现的大文件分片上传, 单文件上传.
 
 ## 使用
 
-[demo](./example/README.md)
+[demo](./example)
 
-[文档](./doc/README.md)
+[文档](./doc)
 
 ## TODO
 
