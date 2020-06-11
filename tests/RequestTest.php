@@ -22,19 +22,19 @@ class RequestTest extends TestCase
     {
         // preprocess
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI'] = '/process';
+        $_SERVER['SCRIPT_NAME'] = '/process';
         $preprocess = new App();
         $this->assertTrue(is_array($preprocess->handle()));
 
         // uploading
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REQUEST_URI'] = '/process';
+        $_SERVER['SCRIPT_NAME'] = '/process';
         $uploading = new App();
         $this->assertTrue(is_array($uploading->handle()));
 
         // delete
         $_SERVER['REQUEST_METHOD'] = 'DELETE';
-        $_SERVER['REQUEST_URI'] = '/process';
+        $_SERVER['SCRIPT_NAME'] = '/process';
         $delete = new App();
         $this->assertTrue(is_array($delete->handle()));
     }
@@ -42,8 +42,8 @@ class RequestTest extends TestCase
     public function testNullProcess()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI'] = '/test';
-        $_SERVER['REQUEST_URI'] = '/test';
+        $_SERVER['SCRIPT_NAME'] = '/test';
+        $_SERVER['SCRIPT_NAME'] = '/test';
 
         $handler = new App();
         $this->assertSame(null, $handler->handle());

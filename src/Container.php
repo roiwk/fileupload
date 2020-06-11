@@ -156,10 +156,6 @@ class Container
      */
     public function handle($withResponse = false)
     {
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE');
-        header('Access-Control-Allow-Headers: Origin,Accept, X-Requested-With, Content-Type,X-CSRF-TOKEN');
-        header('Access-Control-Allow-Credentials: true');
         // CORS -- option
         // if (strtoupper($_SERVER['REQUEST_METHOD']) == 'OPTIONS'){
         //     return null;
@@ -168,6 +164,10 @@ class Container
             return null;
         }
         if ($withResponse) {
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE');
+            header('Access-Control-Allow-Headers: Origin,Accept, X-Requested-With, Content-Type,X-CSRF-TOKEN');
+            header('Access-Control-Allow-Credentials: true');
             return $this->responseHandler->sendResponse($this->processHandler->handle());
         } else {
             return $this->processHandler->handle();

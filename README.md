@@ -44,6 +44,12 @@ php实现的大文件分片上传, 单文件上传.
 
 > composer require roiwk/fileupload
 
+## 使用
+
+[demo](./example/README.md)
+
+[文档](./doc/README.md)
+
 ## TODO
 
 - [x] 上传服务端

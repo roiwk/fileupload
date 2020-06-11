@@ -11,7 +11,7 @@ class PreprocessTest extends TestCase
     {
         // preprocess
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI'] = '/process';
+        $_SERVER['SCRIPT_NAME'] = '/process';
     }
 
     public function testPassPreprocess()

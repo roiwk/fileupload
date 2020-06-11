@@ -9,37 +9,13 @@ class UploadingTest extends TestCase
     {
         // uploading
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_SERVER['REQUEST_URI'] = '/process';
-    }
-
-    public function testCantPassSizeUploading()
-    {
-        $_FILES = [
-            'file' => [
-               'name'     => 'test_3M+.png',
-               'type'     => 'image/png',
-               'tmp_name' => __DIR__ . '/file/test_3M+.png',
-               'error'    => 0,
-               'size'     => 3991629,
-            ]
-        ];
-        $_REQUEST = [
-            'filename'       => 'test_3M+.png',
-            'resource_chunk' => fread(fopen(__DIR__ . '/file/test_3M+.png', 'r'), 2048001),
-            'chunk_total'    => 2,
-            'chunk_index'    => 1,
-        ];
-
-        $uploading = new App();
-        $handle = $uploading->handle();
-
-        $this->assertSame(1, $handle['error'], json_encode($handle));
+        $_SERVER['SCRIPT_NAME'] = '/process';
     }
 
     public function testPassUploading()
     {
         $_FILES = [
-            'file' => [
+            'chunk_file' => [
                'name'     => 'test_3M+.png',
                'type'     => 'image/png',
                'tmp_name' => __DIR__ . '/file/test_3M+_1',
@@ -50,7 +26,6 @@ class UploadingTest extends TestCase
         $_REQUEST = [
             'sub_dir'        => '20200605',
             'filename'       => 'test_3M+.png',
-            'chunk_file'     => fread(fopen($_FILES['file']['tmp_name'], 'r'), filesize($_FILES['file']['tmp_name'])),
             'chunk_total'    => 2,
             'chunk_index'    => 1,
         ];
@@ -64,7 +39,7 @@ class UploadingTest extends TestCase
     public function testFinishUploading()
     {
         $_FILES = [
-            'file' => [
+            'chunk_file' => [
                'name'     => 'test_3M+.png',
                'type'     => 'image/png',
                'tmp_name' => __DIR__ . '/file/test_3M+_2',
@@ -75,7 +50,6 @@ class UploadingTest extends TestCase
         $_REQUEST = [
             'sub_dir'        => '20200605',
             'filename'       => 'test_3M+.png',
-            'chunk_file'     => fread(fopen($_FILES['file']['tmp_name'], 'r'), filesize($_FILES['file']['tmp_name'])),
             'chunk_total'    => 2,
             'chunk_index'    => 2,
         ];
