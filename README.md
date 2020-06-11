@@ -18,7 +18,7 @@ php实现的大文件分片上传, 单文件上传.
     file_uploads = On
     ```
 
-2. 上传相关的php.ini配置(按需配置)
+2. [按需配置] php.ini
     > max_execution_time = 300
     >
     > memory_limit = 500M
@@ -29,9 +29,26 @@ php实现的大文件分片上传, 单文件上传.
     >
     > max_file_uploads = 50
 
+3. [按需配置] nginx
+    > sendfile       on;
+    >
+    > sendfile_max_chunk 2M;
+    >
+    > client_body_timeout 120;
+    >
+    > client_body_buffer_size 64k;
+    >
+    > client_max_body_size 300m;
+
 ## 安装
 
-> TODO
+> composer install roiwk/fileupload
+
+## TODO
+
+- [x] 上传服务端
+- [x] 上传客户端
+- [ ] Lumen ServerProvider
 
 ## 开源许可协议
 
