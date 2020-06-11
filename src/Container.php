@@ -134,6 +134,10 @@ class Container
         $uri = $_SERVER['PATH_INFO'] ?? $_SERVER['SCRIPT_NAME'] ?? $_SERVER['REQUEST_URI'] ?? $_SERVER['REDIRECT_URL'];
         foreach($this->config->get('route') as $route => $setting) {
             if (strtoupper($setting['method']) == $method && $setting['uri'] == $uri) {
+                if (!in_array($method, ['GET', 'POST'])) {
+                    parse_str(file_get_contents('php://input'), $_REQUEST);
+                }
+
                 $this->process = $route;
                 $this->setRequestParameter();
                 $this->setGlobalFiles();
@@ -157,9 +161,13 @@ class Container
     public function handle($withResponse = false)
     {
         // CORS -- option
-        // if (strtoupper($_SERVER['REQUEST_METHOD']) == 'OPTIONS'){
-        //     return null;
-        // }
+        if (strtoupper($_SERVER['REQUEST_METHOD']) == 'OPTIONS'){
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, PATCH, DELETE');
+            header('Access-Control-Allow-Headers: Origin,Accept, X-Requested-With, Content-Type,X-CSRF-TOKEN');
+            header('Access-Control-Allow-Credentials: true');
+            return null;
+        }
         if (!$this->filterFromGlobal()) {
             return null;
         }
