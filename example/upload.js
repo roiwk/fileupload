@@ -11,10 +11,13 @@ var roiwkUpload = function(config = null) {
 
     let option = {
         domain: "http://127.0.0.1:8888",
+        error_to_delete: true,
         preprocess_route:"/process",
         preprocess_method:"get",
         uploading_route:"/process",
         uploading_method:"post",
+        delete_route:"/process",
+        delete_method:"delete",
         preprocess_error_callback: function(){
             console.log(errMsg);
         },
@@ -79,7 +82,6 @@ var roiwkUpload = function(config = null) {
     let blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
 
     let uploading = () => {
-        // async 这个应该是同步执行吧
         (async function() {
             let chunkTotal = Math.ceil(uploadFile.size / chunkSize);
             let start = 0;
@@ -120,6 +122,7 @@ var roiwkUpload = function(config = null) {
                             } else {
                                 error = true;
                                 errMsg = data.err_msg;
+                                remoteDelete();
                             }
                         },
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -128,6 +131,7 @@ var roiwkUpload = function(config = null) {
                                 uploading();
                             } else {
                                 uploadingErr = true;
+                                remoteDelete();
                                 if (option.uploading_error_callback.toString() === "function(){}") {
                                     throw errorThrown;
                                 } else {
@@ -144,6 +148,30 @@ var roiwkUpload = function(config = null) {
                 index++;
             }
         })();
+    }
+
+    let remoteDelete = () => {
+        if (!option.error_to_delete) {
+            return;
+        }
+        $.ajax({
+            type: option.delete_method,
+            url: option.domain + option.delete_route,
+            dataType: "json",
+            async: false,
+            cache: false,
+            crossDomain: true,
+            data: {
+                filename: uploadFile.name,
+                sub_dir: subDir
+            },
+            success: function(data, textStatus, jqXHR){
+                // nothing to do
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                // error
+            }
+        });
     }
 
     let sleep = (milliSecond) => {
