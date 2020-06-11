@@ -1,35 +1,56 @@
 <?php
 
+use Roiwk\FileUpload\NameHash\{Md5};
+use Roiwk\FileUpload\Response\DefaultResponse;
+
 return [
-    'file_upload_key' => 'file',     // 文件字段名
-    'max_size'        => 2048000,    // 文件最大大小  2M
-    'chunk_limit'     => 2048000,    // 分块限制      2M
-    'upload_limit'    => 2048000,    // 上传限制      2M
-    'response'        => 'default',  // defalut, jquery-file-upload
-    'route'   =>  [
-        'preprocess'   => [
-            'method' => 'get',
-            'uri'    => '/process',
-        ],
-        'uploading' => [
-            'method' => 'post',
-            'uri'    => '/process',
-        ],
-        'delete'   => [
-            'method' => 'delete',
-            'uri'    => '/process',
-        ],
-    ],
-    'storage' => [
-        'filename_hash' => [
-            'algo' => 'md5_file', //md5, sha1, md5_file, sha1_file
-            'salt' => '',
-        ],
-        'store_dir' => '/path/to/store',
-    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | 上传检验与限制配置
+    |--------------------------------------------------------------------------
+    |
+    | max_size                      最大文件大小
+    | chunk_limit                   分片文件大小
+    | forbidden_extensions          文件扩展名黑名单
+    |
+    */
+    'max_size'        => 204800000,
+    'chunk_limit'     => 2048000,
     'forbidden_extensions' => [
         'php', 'part', 'html', 'shtml', 'htm', 'shtm', 'xhtml', 'xml', 'js', 'jsp', 'asp',
         'java', 'py', 'sh', 'bat', 'exe', 'dll', 'cgi', 'htaccess', 'reg', 'aspx', 'vbs'
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | 响应对象配置
+    |--------------------------------------------------------------------------
+    |
+    | 响应对象的提供者, 默认返回json
+    | 可实现 ResponseInterface, 并修改配置response_provider实现自定义响应
+    |
+    */
+    'response_provider' => DefaultResponse::class,  // defalut
+
+    /*
+    |--------------------------------------------------------------------------
+    | 存储配置
+    |--------------------------------------------------------------------------
+    |
+    | store_dir                     文件存储的主目录
+    | sub_dir                       子文件生成方式  date: Y-m-d  month: Y-m  year: Y
+    | filename_algo                 上传文件的目录与文件名的散列算法
+    | filename_prefix               上传文件的散列后文件名前缀
+    | filename_suffix               上传文件的散列后文件名后缀
+    |
+    */
+    'storage' => [
+        'store_dir'       => __DIR__ . '/../tests/store',
+        'sub_dir'         => 'date',
+        'filename_algo'   => Md5::class,
+        'filename_prefix' => '',
+        'filename_suffix' => '',
     ],
 
 ];
