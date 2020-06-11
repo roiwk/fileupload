@@ -78,72 +78,76 @@ var roiwkUpload = function(config = null) {
 
     let blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
 
-    let uploading = (start=0, index=1, uploadingErr=false) => {
-        let chunkTotal = Math.ceil(uploadFile.size / chunkSize);
-        // let start = 0;
-        // let index = 1;
-        // let uploadingErr = false;
-        if (!uploadingErr && index <= chunkTotal) {
-            let end = index * chunkSize;
-            if (end > uploadFile.size) {
-                end = uploadFile.size;
-            }
+    let uploading = () => {
+        // async 这个应该是同步执行吧
+        (async function() {
+            let chunkTotal = Math.ceil(uploadFile.size / chunkSize);
+            let start = 0;
+            let index = 1;
+            let uploadingErr = false;
 
-            let formData = new FormData();
-            formData.append('sub_dir', subDir);
-            formData.append('filename', uploadFile.name);
-            formData.append('chunk_total', chunkTotal);
-            formData.append('chunk_index', index);
-            formData.append('chunk_file', blobSlice.call(uploadFile, start, end));
-
-            $.ajax({
-                type: option.uploading_method,
-                url: option.domain + option.uploading_route,
-                dataType: "json",
-                async: false,
-                cache: false,
-                crossDomain: true,
-                contentType: false,
-                processData: false,
-                data: formData,
-                success: function(data, textStatus, jqXHR){
-                    let result = data;
-                    if (result.error == 0){
-                        if (result.finish == 1) {
-                            //finish
-                            return ;
-                        }
-                    } else {
-                        error = true;
-                        errMsg = result.err_msg;
-                    }
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    if (XMLHttpRequest.status === 0) {
-                        sleep(5000);
-                        uploading();
-                    } else {
-                        uploadingErr = true;
-                        if (option.uploading_error_callback.toString() === "function(){}") {
-                            throw errorThrown;
-                        } else {
-                            return option.uploading_error_callback();
-                        }
-                    }
+            while (!uploadingErr && index <= chunkTotal) {
+                let end = index * chunkSize;
+                if (end > uploadFile.size) {
+                    end = uploadFile.size;
                 }
-            });
 
-            let percent = parseInt(index / chunkTotal * 100);
-            option.precent_callback(percent);
+                let formData = new FormData();
+                formData.append('sub_dir', subDir);
+                formData.append('filename', uploadFile.name);
+                formData.append('chunk_total', chunkTotal);
+                formData.append('chunk_index', index);
+                formData.append('chunk_file', blobSlice.call(uploadFile, start, end));
 
-            start = end;
-            index++;
-            uploading(start, index, uploadingErr);
-        }
+                let precent = await new Promise((resolve,reject)=>{
+                    $.ajax({
+                        type: option.uploading_method,
+                        url: option.domain + option.uploading_route,
+                        dataType: "json",
+                        cache: false,
+                        crossDomain: true,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function(data, textStatus, jqXHR){
+                            if (data.error == 0){
+                                let a = parseInt(index / chunkTotal * 100);
+                                resolve(a);
+                                if (data.finish == 1) {
+                                    //finish
+                                    return;
+                                }
+                            } else {
+                                error = true;
+                                errMsg = data.err_msg;
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            if (XMLHttpRequest.status === 0) {
+                                sleep(5000);
+                                uploading();
+                            } else {
+                                uploadingErr = true;
+                                if (option.uploading_error_callback.toString() === "function(){}") {
+                                    throw errorThrown;
+                                } else {
+                                    return option.uploading_error_callback();
+                                }
+                            }
+                        }
+                    });
+                });
+
+                option.precent_callback(precent);
+
+                start = end;
+                index++;
+            }
+        })();
     }
 
     let sleep = (milliSecond) => {
-        var wakeUpTime = new Date().getTime() + milliSecond;
+        let wakeUpTime = new Date().getTime() + milliSecond;
         while (true) {
             if (new Date().getTime() > wakeUpTime) {
                 return;
