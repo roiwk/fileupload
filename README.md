@@ -42,7 +42,7 @@ php实现的大文件分片上传, 单文件上传.
 
 ## 安装
 
-> composer install roiwk/fileupload
+> composer require roiwk/fileupload
 
 ## TODO
 
