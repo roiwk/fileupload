@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 use Roiwk\FileUpload\ConfigMapper;
-use Roiwk\FileUpload\Container as App;
+use Roiwk\FileUpload\Uploader as App;
 use Roiwk\FileUpload\Response\ResponseInterface;
 
 class PreprocessTest extends TestCase

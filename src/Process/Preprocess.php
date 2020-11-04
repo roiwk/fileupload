@@ -2,8 +2,6 @@
 
 namespace Roiwk\FileUpload\Process;
 
-use Roiwk\FileUpload\UploadedFile;
-
 class Preprocess extends AbstractProcess
 {
     public function handle(): array

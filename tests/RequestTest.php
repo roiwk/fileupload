@@ -1,14 +1,14 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Roiwk\FileUpload\Container as App;
+use Roiwk\FileUpload\Uploader as App;
 
 class RequestTest extends TestCase
 {
    protected function setUp(): void
    {
       $_FILES = [
-         'file' => [
+         'chunk_file' => [
             'name'     => 'test.jpg',
             'type'     => 'image/jpeg',
             'tmp_name' => __DIR__ . '/file/test.jpg',

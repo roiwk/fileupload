@@ -106,7 +106,7 @@ class Uploading extends AbstractProcess
      */
     private function checkFinish(): self
     {
-        if ($this->indexFile->finish) {
+        if ($this->indexFile->isFinish) {
             // 合并文件
             $filename = $this->dir . DIRECTORY_SEPARATOR . $this->app->parameter['resource_name'];
             $merge_handle = fopen($filename, 'wb');

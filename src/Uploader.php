@@ -7,7 +7,7 @@ use Roiwk\FileUpload\Process\{Preprocess, Uploading, Delete};
 use Roiwk\FileUpload\Validator\{ForbiddenExtension, Size};
 use Roiwk\FileUpload\Exception\MakeStorageDirException;
 
-class Container
+class Uploader
 {
     /**
      * 配置单例

@@ -1,0 +1,110 @@
+<mxfile host="65bd71144e" modified="2020-11-04T08:33:24.342Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.50.1 Chrome/83.0.4103.122 Electron/9.2.1 Safari/537.36" etag="_cQ9OWot9b1hUV4QEb1m" version="13.6.5">
+    <diagram id="eArgHnw05lGZaxRBrh1a" name="第 1 页">
+        <mxGraphModel dx="1059" dy="792" grid="0" gridSize="12" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#F4F1DE" math="0" shadow="1">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="4" value="Strict" style="shape=umlFrame;whiteSpace=wrap;html=1;width=70;height=30;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;rounded=1;sketch=1;" parent="1" vertex="1">
+                    <mxGeometry x="59" y="150" width="710" height="350" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="客户端" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;rounded=1;sketch=1;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="80" width="100" height="630" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="分片文件提交请求" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=#F4F1DE;strokeColor=#E07A5F;fontColor=#393C56;sketch=1;curved=1;" parent="5" target="13" edge="1">
+                    <mxGeometry x="0.9718" y="-170" width="80" relative="1" as="geometry">
+                        <mxPoint x="50" y="270" as="sourcePoint"/>
+                        <mxPoint x="130" y="270" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="400" y="270"/>
+                        </Array>
+                        <mxPoint x="-170" y="-170" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="20" value="返回上传状态" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;labelBackgroundColor=#F4F1DE;strokeColor=#E07A5F;fontColor=#393C56;sketch=1;curved=1;" parent="5" source="13" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="130" y="360" as="sourcePoint"/>
+                        <mxPoint x="50" y="360" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6" value="服务端" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;rounded=1;sketch=1;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="80" width="100" height="640" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;rounded=1;sketch=1;" parent="6" vertex="1">
+                    <mxGeometry x="45" y="120" width="10" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;rounded=1;sketch=1;" parent="6" vertex="1">
+                    <mxGeometry x="45" y="260" width="10" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;rounded=1;sketch=1;" parent="6" vertex="1">
+                    <mxGeometry x="55" y="160" width="10" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="校验上传限制" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;spacingLeft=2;endArrow=block;exitX=1.1;exitY=0.291;exitDx=0;exitDy=0;exitPerimeter=0;labelBackgroundColor=#F4F1DE;strokeColor=#E07A5F;fontColor=#393C56;sketch=1;curved=1;" parent="6" source="8" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="60" y="150" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="56" y="150"/>
+                            <mxPoint x="85" y="150"/>
+                            <mxPoint x="85" y="164"/>
+                        </Array>
+                        <mxPoint x="65" y="164" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="23" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;rounded=1;sketch=1;" parent="6" vertex="1">
+                    <mxGeometry x="55" y="310" width="10" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="验证最后一个分片, 进行合并文件" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;spacingLeft=2;endArrow=block;entryX=1;entryY=0;exitX=0.5;exitY=0.25;exitDx=0;exitDy=0;exitPerimeter=0;labelBackgroundColor=#F4F1DE;strokeColor=#E07A5F;fontColor=#393C56;sketch=1;curved=1;" parent="6" source="13" target="23" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="60" y="290" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="85" y="290"/>
+                            <mxPoint x="85" y="310"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="25" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;rounded=1;sketch=1;" parent="6" vertex="1">
+                    <mxGeometry x="45" y="495" width="10" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;fillColor=#F2CC8F;strokeColor=#E07A5F;fontColor=#393C56;rounded=1;sketch=1;" parent="6" vertex="1">
+                    <mxGeometry x="55" y="525" width="10" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="删除服务器文件" style="edgeStyle=orthogonalEdgeStyle;html=1;align=left;spacingLeft=2;endArrow=block;entryX=1;entryY=0;exitX=0.5;exitY=0.125;exitDx=0;exitDy=0;exitPerimeter=0;labelBackgroundColor=#F4F1DE;strokeColor=#E07A5F;fontColor=#393C56;sketch=1;curved=1;" parent="6" source="25" target="28" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="60" y="505" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="85" y="505"/>
+                            <mxPoint x="85" y="525"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7" value="配置请求" style="html=1;verticalAlign=bottom;endArrow=block;labelBackgroundColor=#F4F1DE;strokeColor=#E07A5F;fontColor=#393C56;sketch=1;curved=1;" parent="1" source="5" target="6" edge="1">
+                    <mxGeometry width="80" relative="1" as="geometry">
+                        <mxPoint x="170" y="230" as="sourcePoint"/>
+                        <mxPoint x="250" y="230" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="380" y="220"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="9" value="返回分片文件大小" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;labelBackgroundColor=#F4F1DE;strokeColor=#E07A5F;fontColor=#393C56;sketch=1;curved=1;" parent="1" source="8" target="5" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="440" y="287" as="sourcePoint"/>
+                        <mxPoint x="140" y="287" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="320" y="310"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="删除文件请求" style="html=1;verticalAlign=bottom;endArrow=block;entryX=0;entryY=0;labelBackgroundColor=#F4F1DE;strokeColor=#E07A5F;fontColor=#393C56;sketch=1;curved=1;" parent="1" source="5" target="25" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="425" y="585" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="27" value="返回删除状态" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;exitX=0;exitY=0.95;labelBackgroundColor=#F4F1DE;strokeColor=#E07A5F;fontColor=#393C56;sketch=1;curved=1;" parent="1" source="25" target="5" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="425" y="661" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

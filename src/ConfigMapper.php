@@ -5,16 +5,16 @@ namespace Roiwk\FileUpload;
 final class ConfigMapper
 {
     /**
-     * @var static
+     * @var self
      */
     private static $instance = null;
 
     /**
      * 获取实例
      *
-     * @return static
+     * @return self
      */
-    public static function getInstance($config = null): ConfigMapper
+    public static function getInstance($config = null): self
     {
         if (static::$instance === null) {
             static::$instance = new static();

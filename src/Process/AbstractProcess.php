@@ -2,7 +2,7 @@
 
 namespace Roiwk\FileUpload\Process;
 
-use Roiwk\FileUpload\Container;
+use Roiwk\FileUpload\Uploader;
 use Roiwk\FileUpload\PathSolver;
 
 abstract class AbstractProcess
@@ -20,7 +20,7 @@ abstract class AbstractProcess
     public $errMsg = '';
 
     /**
-     * @var Container
+     * @var Uploader
      */
     public $app;
 
@@ -48,9 +48,9 @@ abstract class AbstractProcess
     /**
      * construct
      *
-     * @param Container $app
+     * @param Uploader $app
      */
-    public function __construct(Container $app)
+    public function __construct(Uploader $app)
     {
         $this->app = $app;
 

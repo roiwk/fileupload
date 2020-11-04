@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Roiwk\FileUpload\Container as App;
+use Roiwk\FileUpload\Uploader as App;
 
 class UploadingTest extends TestCase
 {

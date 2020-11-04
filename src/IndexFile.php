@@ -28,7 +28,7 @@ class IndexFile
     /**
      * @var bool
      */
-    public $finish = false;
+    public $isFinish = false;
 
     /**
      * @var array
@@ -64,14 +64,14 @@ class IndexFile
     {
         $this->indexArray[$this->current] = $chunkFilename;
         if ($this->total == count($this->indexArray)) {
-            $this->finish = true;
+            $this->isFinish = true;
         }
         return $this;
     }
 
     public function __destruct()
     {
-        if (!$this->finish) {
+        if (!$this->isFinish) {
             file_put_contents($this->filename, serialize($this), LOCK_EX);
         } else {
             @unlink($this->filename);

@@ -1,14 +1,16 @@
 # demo
 
-## 前端
+## 1.前端
 
-### 必需
+### 1.1必需
 
 > jquery
 
-### 简单用法
+jquery用于实现ajax
 
-1. 点击按钮, 实现上传
+### 1.2简单用法
+
+点击按钮, 实现上传
 
 ```html
     <input type="file" name="file" id="upload">
@@ -28,9 +30,7 @@
     </script>
 ```
 
-## 后端
-
-1. 默认处理并返回json
+## 2.后端
 
 ```php
 // index.php
@@ -41,7 +41,7 @@ echo $app->handle(true);
 
 ```
 
- cmd/shall 启动php的web服务(保证与前端domain配置相同即可); 或使用web服务器监听80端口
+启动php的web服务或使用web服务器(保证前后端domain配置相同即可)
 
 ```shell
 php -S 127.0.0.1:80 index.php
