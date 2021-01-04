@@ -3,17 +3,15 @@
  * var upload = new roiwkUpload({
  *  domain: "server"
  * });
- * upload.upload($("#upload").prop('files')[0])
+ * upload.upload(document.querySelector("#upload").files[0])
  *
  * @param {Object}} config
  */
 var roiwkUpload = function(config = null) {
-
     let option = {
         domain: "http://127.0.0.1:8888",
         error_to_delete: true,
         preprocess_route:"/process",
-        preprocess_method:"get",
         uploading_route:"/process",
         uploading_method:"post",
         delete_route:"/process",
@@ -45,44 +43,35 @@ var roiwkUpload = function(config = null) {
         preprocess();
     }
 
-    let preprocess = () => {
-        $.ajax({
-            type: option.preprocess_method,
-            url: option.domain + option.preprocess_route,
-            dataType: "json",
-            async: false,
-            cache: false,
-            crossDomain: true,
-            data : {
-                filename: uploadFile.name,
-                size: uploadFile.size
-            },
-            success: function(data, textStatus, jqXHR){
-                let result = data;
-                if (result.error == 0){
-                    chunkSize = result.chunk_size;
-                    subDir = result.sub_dir;
-                    uploading();
-                } else {
-                    error = true;
-                    errMsg = result.err_msg;
-                    console.error(errMsg);
-                }
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                if (option.preprocess_error_callback.toString() === "function(){}") {
-                    throw errorThrown;
-                } else {
-                    return option.preprocess_error_callback();
-                }
+    let preprocess = async() => {
+        try {
+            let response = await fetch(
+                option.domain + option.preprocess_route + '?filename=' + uploadFile.name + '&size=' + uploadFile.size,
+                {cache: "no-store",}
+                );
+            let result = await response.json();
+            if (result.error == 0) {
+                chunkSize = result.chunk_size;
+                subDir = result.sub_dir;
+                uploading();
+            } else {
+                error = true;
+                errMsg = result.err_msg;
+                console.error(errMsg);
             }
-        });
+        } catch (error) {
+            console.log(error);
+            if (option.preprocess_error_callback.toString() === "function(){}") {
+                throw error;
+            } else {
+                return option.preprocess_error_callback();
+            }
+        }
     }
 
     let blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
 
-    let uploading = () => {
-        (async function() {
+    let uploading = async() => {
             let chunkTotal = Math.ceil(uploadFile.size / chunkSize);
             let start = 0;
             let index = 1;
@@ -101,76 +90,64 @@ var roiwkUpload = function(config = null) {
                 formData.append('chunk_index', index);
                 formData.append('chunk_file', blobSlice.call(uploadFile, start, end));
 
-                let precent = await new Promise((resolve,reject)=>{
-                    $.ajax({
-                        type: option.uploading_method,
-                        url: option.domain + option.uploading_route,
-                        dataType: "json",
-                        cache: false,
-                        crossDomain: true,
-                        contentType: false,
-                        processData: false,
-                        data: formData,
-                        success: function(data, textStatus, jqXHR){
-                            if (data.error == 0){
-                                let a = parseInt(index / chunkTotal * 100);
-                                resolve(a);
-                                if (data.finish == 1) {
-                                    //finish
-                                    return;
-                                }
-                            } else {
-                                error = true;
-                                errMsg = data.err_msg;
-                                remoteDelete();
-                            }
-                        },
-                        error: function (XMLHttpRequest, textStatus, errorThrown) {
-                            if (XMLHttpRequest.status === 0) {
-                                sleep(5000);
-                                uploading();
-                            } else {
-                                uploadingErr = true;
-                                remoteDelete();
-                                if (option.uploading_error_callback.toString() === "function(){}") {
-                                    throw errorThrown;
-                                } else {
-                                    return option.uploading_error_callback();
-                                }
-                            }
-                        }
-                    });
-                });
+                try {
+                    let response = await fetch(option.domain + option.uploading_route, {
+                            method: option.uploading_method,
+                            body: formData,
+                            cache: "no-store",
+                        })
+                    let result = await response.json();
+                    console.log(result);
 
-                option.precent_callback(precent);
+                    if (result.error == 0) {
+                        let precent = parseInt(index / chunkTotal * 100);
+                        option.precent_callback(precent);
+                        if (result.finish == 1) {
+                            //* finish
+                            return;
+                        }
+                    } else {
+                        error = true;
+                        errMsg = result.err_msg;
+                        remoteDelete();
+                    }
+                } catch (error) {
+                    if (response.status === 0) {
+                        sleep(5000);
+                        uploading();
+                    } else {
+                        uploadingErr = true;
+                        remoteDelete();
+                        if (option.uploading_error_callback.toString() === "function(){}") {
+                            throw errorThrown;
+                        } else {
+                            return option.uploading_error_callback();
+                        }
+                    }
+                }
 
                 start = end;
                 index++;
             }
-        })();
+
     }
 
     let remoteDelete = () => {
         if (!option.error_to_delete) {
             return;
         }
-        $.ajax({
-            type: option.delete_method,
-            url: option.domain + option.delete_route,
-            dataType: "json",
-            async: false,
-            cache: false,
-            crossDomain: true,
-            data: {
-                filename: uploadFile.name,
-                sub_dir: subDir
-            },
-            success: function(data, textStatus, jqXHR){
-                // nothing to do
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                // error
-            }
+        let formData = new FormData();
+        formData.append('sub_dir', subDir);
+        formData.append('filename', uploadFile.name);
+        fetch(option.domain + option.delete_route, {
+            method: option.delete_method,
+            body: formData,
+            cache: "no-store",
+        })
+        .then(response => {
+            // nothing to do
+        }).catch(err => {
+            // error
         });
     }
 

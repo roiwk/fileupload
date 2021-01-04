@@ -8,11 +8,45 @@
 
 > composer require roiwk/fileupload
 
+
+## 需求
+
+1. 浏览器支持fetch()
+
 ## 使用
 
-[demo](./example)
+前端:
 
-[文档](./doc)
+```html
+<input type="file" name="file" id="upload">
+<button id="btn">Upload</button>
+
+<script src="./upload.js"></script>
+
+<script>
+    $(function(){
+        var upload = new roiwkUpload({
+            domain: "http://127.0.0.1"
+        });
+        document.querySelector("#btn").onclick = function(){
+            upload.upload(document.querySelector("#upload").files[0]);
+        };
+    });
+</script>
+```
+
+后端:
+
+```php
+// index.php
+include_once 'path/to/vendor/autoload.php';
+
+$app = new Roiwk\FileUpload\Container();
+echo $app->handle(true);
+
+```
+
+TODO: [文档](./doc)  文档还没写
 
 ## 开源许可协议
 
