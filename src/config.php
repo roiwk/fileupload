@@ -35,8 +35,8 @@ return [
     */
     'route'   =>  [
         'preprocess'   => [
-            'method' => 'get',
-            'uri'    => '/process',
+            'method' => 'post',
+            'uri'    => '/roiwk/upload/preprocess',
             'param_map' => [
                 'resource_name' => 'filename',
                 'resource_size' => 'size',
@@ -44,7 +44,7 @@ return [
         ],
         'uploading' => [
             'method' => 'post',
-            'uri'    => '/process',
+            'uri'    => '/roiwk/upload/uploading',
             'param_map' => [
                 'sub_dir'        => 'sub_dir',
                 'resource_name'  => 'filename',
@@ -54,8 +54,8 @@ return [
             ],
         ],
         'delete'   => [
-            'method' => 'delete',
-            'uri'    => '/process',
+            'method' => 'post',
+            'uri'    => '/roiwk/upload/delete',
             'param_map' => [
                 'sub_dir'        => 'sub_dir',
                 'resource_name'  => 'filename',

@@ -8,7 +8,6 @@
 
 > composer require roiwk/fileupload
 
-
 ## 需求
 
 1. 浏览器支持fetch()
@@ -24,14 +23,14 @@
 <script src="./upload.js"></script>
 
 <script>
-    $(function(){
+    window.onload = function () {
         var upload = new roiwkUpload({
             domain: "http://127.0.0.1"
         });
         document.querySelector("#btn").onclick = function(){
             upload.upload(document.querySelector("#upload").files[0]);
         };
-    });
+    }
 </script>
 ```
 
@@ -41,7 +40,7 @@
 // index.php
 include_once 'path/to/vendor/autoload.php';
 
-$app = new Roiwk\FileUpload\Container();
+$app = new Roiwk\FileUpload\UploaderContainer();
 echo $app->handle(true);
 
 ```

@@ -11,11 +11,9 @@ var roiwkUpload = function(config = null) {
     let option = {
         domain: "http://127.0.0.1:8888",
         error_to_delete: true,
-        preprocess_route:"/process",
-        uploading_route:"/process",
-        uploading_method:"post",
-        delete_route:"/process",
-        delete_method:"delete",
+        preprocess_route:"/roiwk/upload/preprocess",
+        uploading_route:"/roiwk/upload/uploading",
+        delete_route:"/roiwk/upload/delete",
         preprocess_error_callback: function(){
             console.log(errMsg);
         },
@@ -45,9 +43,12 @@ var roiwkUpload = function(config = null) {
 
     let preprocess = async() => {
         try {
+            let formData = new FormData();
+            formData.append('filename', uploadFile.name);
+            formData.append('size', uploadFile.size);
             let response = await fetch(
-                option.domain + option.preprocess_route + '?filename=' + uploadFile.name + '&size=' + uploadFile.size,
-                {cache: "no-store",}
+                option.domain + option.preprocess_route,
+                { method: "post", body: formData, cache: "no-store" }
                 );
             let result = await response.json();
             if (result.error == 0) {
@@ -91,11 +92,10 @@ var roiwkUpload = function(config = null) {
                 formData.append('chunk_file', blobSlice.call(uploadFile, start, end));
 
                 try {
-                    let response = await fetch(option.domain + option.uploading_route, {
-                            method: option.uploading_method,
-                            body: formData,
-                            cache: "no-store",
-                        })
+                    let response = await fetch(
+                        option.domain + option.uploading_route,
+                        { method: "post", body: formData, cache: "no-store" }
+                        );
                     let result = await response.json();
                     console.log(result);
 
@@ -140,7 +140,7 @@ var roiwkUpload = function(config = null) {
         formData.append('sub_dir', subDir);
         formData.append('filename', uploadFile.name);
         fetch(option.domain + option.delete_route, {
-            method: option.delete_method,
+            method: "post",
             body: formData,
             cache: "no-store",
         })
