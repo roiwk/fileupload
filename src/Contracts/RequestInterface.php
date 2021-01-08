@@ -6,7 +6,8 @@ interface RequestInterface
 {
     public function get(): array;
     public function post(): array;
-    public function input(): array;
+    public function request(): array;
+    public function server(): array;
     public function header(): array;
     public function file(): array;
 }
