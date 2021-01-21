@@ -1,7 +1,8 @@
 <?php
 
+use Roiwk\FileUpload\Contacts\{RequestInterface, ResponseInterface, UploaderInterface};
+use Roiwk\FileUpload\Core\{ProtoRequest, ProtoResponse};
 use Roiwk\FileUpload\NameHash\{Md5};
-use Roiwk\FileUpload\Response\DefaultResponse;
 
 return [
 
@@ -37,29 +38,29 @@ return [
         'preprocess'   => [
             'method' => 'post',
             'uri'    => '/roiwk/upload/preprocess',
-            'param_map' => [
-                'resource_name' => 'filename',
-                'resource_size' => 'size',
-            ],
+            // 'param_map' => [
+            //     'resource_name' => 'filename',
+            //     'resource_size' => 'size',
+            // ],
         ],
         'uploading' => [
             'method' => 'post',
             'uri'    => '/roiwk/upload/uploading',
-            'param_map' => [
-                'sub_dir'        => 'sub_dir',
-                'resource_name'  => 'filename',
-                'resource_chunk' => 'chunk_file',
-                'chunk_total'    => 'chunk_total',
-                'chunk_index'    => 'chunk_index',
-            ],
+            // 'param_map' => [
+            //     'sub_dir'        => 'sub_dir',
+            //     'resource_name'  => 'filename',
+            //     'resource_chunk' => 'chunk_file',
+            //     'chunk_total'    => 'chunk_total',
+            //     'chunk_index'    => 'chunk_index',
+            // ],
         ],
         'delete'   => [
             'method' => 'post',
             'uri'    => '/roiwk/upload/delete',
-            'param_map' => [
-                'sub_dir'        => 'sub_dir',
-                'resource_name'  => 'filename',
-            ],
+            // 'param_map' => [
+            //     'sub_dir'        => 'sub_dir',
+            //     'resource_name'  => 'filename',
+            // ],
         ],
     ],
 
@@ -72,7 +73,18 @@ return [
     | 可实现 ResponseInterface, 并修改配置response_provider实现自定义响应
     |
     */
-    'response_provider' => DefaultResponse::class,  // defalut
+
+    'providers' => [
+
+    ],
+
+    'registers' => [
+        RequestInterface::class => ProtoRequest::class,
+        ResponseInterface::class => ProtoResponse::class,
+        // UploaderInterface::class => ,
+        // FilenameHashInterface::class =>
+    ],
+
 
     /*
     |--------------------------------------------------------------------------

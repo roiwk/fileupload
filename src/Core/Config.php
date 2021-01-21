@@ -2,10 +2,9 @@
 
 namespace Roiwk\FileUpload\Core;
 
-use Roiwk\FileUpload\Contacts\ConfigInterface;
 use Roiwk\FileUpload\Exception\ConfigFileNeedArrayException;
 
-final class Config implements ConfigInterface
+final class Config
 {
     /**
      * @var self
