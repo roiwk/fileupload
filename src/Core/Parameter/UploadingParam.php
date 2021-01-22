@@ -1,6 +1,6 @@
 <?php
 
-namespace Roiwk\FileUpload\Core\Request;
+namespace Roiwk\FileUpload\Core\Parameter;
 
 use Roiwk\FileUpload\Contacts\RequestInterface;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Roiwk\FileUpload\Core\Request;
+namespace Roiwk\FileUpload\Core\Parameter;
 
 use Roiwk\FileUpload\Contacts\RequestInterface;
 
@@ -16,8 +16,8 @@ class DeleteParam
         return $this->request->get()['filename'] ?? '';
     }
 
-    public function size(): int
+    public function subDir(): string
     {
-        return $this->request->get()['size'] ?? 0;
+        return $this->request->post()['sub_dir'];
     }
 }

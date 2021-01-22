@@ -1,6 +1,6 @@
 <?php
 
-namespace Roiwk\FileUpload\Core\Request;
+namespace Roiwk\FileUpload\Core\Parameter;
 
 use Roiwk\FileUpload\Contacts\RequestInterface;
 
@@ -13,11 +13,11 @@ class PreprocessParam
 
     public function filename(): string
     {
-        return $this->request->get()['filename'] ?? '';
+        return $this->request->post()['filename'] ?? '';
     }
 
     public function size(): int
     {
-        return $this->request->get()['size'] ?? 0;
+        return $this->request->post()['size'] ?? 0;
     }
 }
